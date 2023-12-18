@@ -2,10 +2,12 @@ using Microsoft.Extensions.Options;
 using NetCoreMinimalApi.Domain.Mappers;
 using NetCoreMinimalApi.Domain.Models;
 using NetCoreMinimalApi.Repositories;
+using NetCoreMinimalApi.Services;
 using NetCoreMinimalApi.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
+var configuration = builder.Configuration;
 
 EntityMapper.Map<Book, string?>();
 
@@ -19,17 +21,24 @@ services.AddSingleton<IMongoDbSettings>(sp =>
 services.AddSingleton<IRepository<Book, string?>, BookRepository>();
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
-services.AddSwaggerGen();
+builder.Services.AddCors();
+builder.Services.AddSwaggerOAuth2(configuration);
+builder.Services.AddOAuth2(configuration);
 
 var app = builder.Build();
+
+app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options => {
+        options.OAuthClientId(configuration["Keycloak:resource"]);
+    });
 }
 
 app.UseHttpsRedirection();
@@ -45,7 +54,7 @@ app.MapGet("/book/{id}", async (string? id, IRepository<Book, string?> db) =>
         ? Results.Ok(book)
         : Results.NotFound();
 });
-app.MapGet("/book/{criteria}/{search}", async (string criteria, string search, IRepository<Book, string?> db) =>
+app.MapGet("/books/{criteria}/{search}", async (string criteria, string search, IRepository<Book, string?> db) =>
 {
     return await db.ReadByCriteriaAsync(criteria, search);
 });
