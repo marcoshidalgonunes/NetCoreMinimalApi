@@ -1,4 +1,4 @@
-﻿using NetCoreMinimalApi.Domain.Models;
+﻿using NetCoreMinimalApi.Models;
 
 namespace NetCoreMinimalApi.Repositories;
 

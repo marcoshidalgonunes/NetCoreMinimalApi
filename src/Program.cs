@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Options;
-using NetCoreMinimalApi.Domain.Models;
+using NetCoreMinimalApi.Models;
 using NetCoreMinimalApi.Repositories;
 using NetCoreMinimalApi.Services;
 using NetCoreMinimalApi.Settings;

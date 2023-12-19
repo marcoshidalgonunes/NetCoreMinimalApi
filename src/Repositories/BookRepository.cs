@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
-using NetCoreMinimalApi.Domain.Models;
+using NetCoreMinimalApi.Models;
 using NetCoreMinimalApi.Settings;
 using System.Text.RegularExpressions;
 
