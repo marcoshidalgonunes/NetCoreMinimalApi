@@ -1,8 +1,13 @@
-﻿namespace NetCoreMinimalApi.Domain.Models;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 
-public sealed class Book : Entity<string?>
+namespace NetCoreMinimalApi.Domain.Models;
+
+public sealed class Book
 {
-    public override string? Id { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)] 
+    public string? Id { get; set; }
 
     public required string Name { get; set; }
 

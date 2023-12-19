@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace NetCoreMinimalApi.Repositories;
 
-public class BookRepository : IRepository<Book, string?>
+public class BookRepository : IBookRepository
 {
     private readonly IMongoCollection<Book> _collection;
 
