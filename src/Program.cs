@@ -1,5 +1,6 @@
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.Options;
-using NetCoreMinimalApi.Models;
+using NetCoreMinimalApi.Mappers;
 using NetCoreMinimalApi.Repositories;
 using NetCoreMinimalApi.Services;
 using NetCoreMinimalApi.Settings;
@@ -19,9 +20,28 @@ services.AddSingleton<IBookRepository, BookRepository>();
 
 // Add services to the container.
 services.AddEndpointsApiExplorer();
-builder.Services.AddCors();
-builder.Services.AddSwaggerOAuth2(configuration);
-builder.Services.AddOAuth2(configuration);
+services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.SetIsOriginAllowed(origin => new Uri(origin).IsLoopback || origin.StartsWith("https://"))
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
+if (!builder.Environment.IsProduction())
+{
+    services.AddSwaggerOAuth2(configuration);
+
+    // Configure JSON options for Swagger
+    services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
+}
+
+services.AddOAuth2(configuration);
+
+// Configure JSON options
+services.Configure<JsonOptions>(options => options.SerializerOptions.PropertyNamingPolicy = null);
 
 var app = builder.Build();
 
@@ -40,47 +60,6 @@ if (!app.Environment.IsProduction())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/books", async (IBookRepository db) =>
-{
-    return await db.ReadAllAsync();
-
-});
-app.MapGet("/book/{id}", async (string? id, IBookRepository db) =>
-{
-    return await db.ReadByIdAsync(id) is Book book
-        ? Results.Ok(book)
-        : Results.NotFound();
-});
-app.MapGet("/books/{criteria}/{search}", async (string criteria, string search, IBookRepository db) =>
-{
-    return await db.ReadByCriteriaAsync(criteria, search);
-});
-app.MapPost("/book", async (Book book, IBookRepository db) =>
-{
-    await db.CreateAsync(book);
-
-    return Results.Created($"/book/{book.Id}", book);
-});
-app.MapPut("/book", async (Book bookIn, IBookRepository db) =>
-{
-    if (await db.ReadByIdAsync(bookIn.Id) is Book book)
-    {
-        await db.UpdateAsync(bookIn);
-        return Results.NoContent();
-    }
-
-    return Results.NotFound();
-});
-app.MapDelete("/book/{id}", async (string? id, IBookRepository db) =>
-{
-    if (await db.ReadByIdAsync(id) is Book book)
-    {
-        await db.DeleteAsync(id);
-        return Results.NoContent();
-    }
-
-    return Results.NotFound();
-});
-
+app.MapGroup("/api/Books").MapBookApi();
 
 app.Run();

@@ -44,14 +44,14 @@ public class BookRepository : IBookRepository
 
     public async Task<Book> ReadByIdAsync(string? id)
     {
-        using var items = await _collection.FindAsync(item => item.Id!.Equals(id));
+        using var items = await _collection.FindAsync(item => item.id!.Equals(id));
 
         return await items.FirstOrDefaultAsync();
     }
 
     public async Task UpdateAsync(Book itemIn) =>
-        await _collection.ReplaceOneAsync(item => item.Id!.Equals(itemIn.Id), itemIn);
+        await _collection.ReplaceOneAsync(item => item.id!.Equals(itemIn.id), itemIn);
 
     public async Task DeleteAsync(string? id) =>
-        await _collection.DeleteOneAsync(item => item.Id!.Equals(id));
+        await _collection.DeleteOneAsync(item => item.id!.Equals(id));
 }

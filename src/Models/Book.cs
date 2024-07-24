@@ -6,8 +6,8 @@ namespace NetCoreMinimalApi.Models;
 public sealed class Book
 {
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? Id { get; set; }
+    [BsonRepresentation(BsonType.ObjectId)] 
+    public string? id { get; set; }
 
     public required string Name { get; set; }
 
