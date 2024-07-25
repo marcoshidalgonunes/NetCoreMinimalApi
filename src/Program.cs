@@ -4,6 +4,7 @@ using NetCoreMinimalApi.Routes;
 using NetCoreMinimalApi.Repositories;
 using NetCoreMinimalApi.Services;
 using NetCoreMinimalApi.Settings;
+using NetCoreMinimalApi.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -45,6 +46,9 @@ services.AddOAuth2(configuration);
 services.Configure<JsonOptions>(options => options.SerializerOptions.PropertyNamingPolicy = null);
 
 var app = builder.Build();
+
+// Register the exception handling middleware
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseCors();
 app.UseAuthentication();
