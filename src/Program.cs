@@ -8,6 +8,7 @@ using NetCoreMinimalApi.Settings;
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
+var isProduction = builder.Environment.IsProduction();
 
 // requires using Microsoft.Extensions.Options
 services.Configure<MongoDbSettings>(
@@ -30,7 +31,7 @@ services.AddCors(options =>
     });
 });
 
-if (!builder.Environment.IsProduction())
+if (!isProduction)
 {
     services.AddSwaggerOAuth2(configuration);
 
@@ -50,7 +51,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsProduction())
+if (!isProduction)
 {
     app.UseSwagger();
     app.UseSwaggerUI(options => {
