@@ -11,7 +11,7 @@ public static class SwaggerGenOAuth2Service
     {
         _ = services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Weather Forecast API v1.0", Version = "v1" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Net Core Minimal API v1.0", Version = "v1" });
             c.AddSecurityDefinition(SECURITY_SCHEMA, new OpenApiSecurityScheme
             {
                 Type = SecuritySchemeType.OAuth2,
