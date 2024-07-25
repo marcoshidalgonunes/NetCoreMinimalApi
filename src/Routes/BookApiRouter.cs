@@ -1,11 +1,11 @@
-﻿using NetCoreMinimalApi.Domain.Models;
+﻿using NetCoreMinimalApi.Models;
 using NetCoreMinimalApi.Repositories;
 
-namespace NetCoreMinimalApi.Mappers;
+namespace NetCoreMinimalApi.Routes;
 
-internal static class BookApiMapper
+internal static class BookApiRouter
 {
-    internal static RouteGroupBuilder MapBookApi(this RouteGroupBuilder group)
+    internal static RouteGroupBuilder AddBookApi(this RouteGroupBuilder group)
     {
         group.MapGet(string.Empty, async (IBookRepository db) =>
         {

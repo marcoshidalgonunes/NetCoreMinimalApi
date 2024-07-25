@@ -12,14 +12,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Domain\Mappers\**" />
-    <Content Remove="Domain\Mappers\**" />
-    <EmbeddedResource Remove="Domain\Mappers\**" />
-    <None Remove="Domain\Mappers\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Domain\Models\Entity.cs" />
+    <Compile Remove="Domain\**" />
+    <Content Remove="Domain\**" />
+    <EmbeddedResource Remove="Domain\**" />
+    <None Remove="Domain\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\" />
     <Folder Include="Settings\" />
   </ItemGroup>
 

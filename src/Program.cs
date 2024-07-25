@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.Options;
-using NetCoreMinimalApi.Mappers;
+using NetCoreMinimalApi.Routes;
 using NetCoreMinimalApi.Repositories;
 using NetCoreMinimalApi.Services;
 using NetCoreMinimalApi.Settings;
@@ -60,6 +60,6 @@ if (!app.Environment.IsProduction())
 
 app.UseHttpsRedirection();
 
-app.MapGroup("/api/Books").MapBookApi();
+app.MapGroup("/api/Books").AddBookApi();
 
 app.Run();
