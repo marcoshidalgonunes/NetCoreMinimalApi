@@ -65,6 +65,6 @@ if (!isProduction)
 
 app.UseHttpsRedirection();
 
-app.MapGroup("/api/Books").AddBookApi();
+app.MapGroup("/api").AddBookApi();
 
 app.Run();
