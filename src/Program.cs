@@ -5,6 +5,9 @@ using NetCoreMinimalApi.Repositories;
 using NetCoreMinimalApi.Services;
 using NetCoreMinimalApi.Settings;
 using NetCoreMinimalApi.Middleware;
+using FluentValidation;
+using NetCoreMinimalApi.Domain.Validation;
+using NetCoreMinimalApi.Domain.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -19,6 +22,8 @@ services.AddSingleton<IMongoDbSettings>(sp =>
        sp.GetRequiredService<IOptions<MongoDbSettings>>().Value);
 
 services.AddSingleton<IBookRepository, BookRepository>();
+
+services.AddScoped<IValidator<Book>, BookValidator>();
 
 // Add services to the container.
 services.AddEndpointsApiExplorer();

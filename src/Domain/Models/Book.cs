@@ -1,12 +1,12 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 
-namespace NetCoreMinimalApi.Models;
+namespace NetCoreMinimalApi.Domain.Models;
 
 public sealed class Book
 {
     [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)] 
+    [BsonRepresentation(BsonType.ObjectId)]
     public string? id { get; set; }
 
     public required string Name { get; set; }

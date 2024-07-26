@@ -1,20 +1,23 @@
-﻿using MongoDB.Bson;
+﻿using System.Text.RegularExpressions;
+using FluentValidation;
+using MongoDB.Bson;
 using MongoDB.Driver;
-using NetCoreMinimalApi.Models;
+using NetCoreMinimalApi.Domain.Models;
 using NetCoreMinimalApi.Settings;
-using System.Text.RegularExpressions;
 
 namespace NetCoreMinimalApi.Repositories;
 
 public class BookRepository : IBookRepository
 {
     private readonly IMongoCollection<Book> _collection;
+    private readonly IValidator<Book> _validator;
 
-    public BookRepository(IMongoDbSettings settings)
+    public BookRepository(IMongoDbSettings settings, IValidator<Book> validator)
     {
+        _validator = validator;
+
         var client = new MongoClient(settings.ConnectionString);
         var database = client.GetDatabase(settings.DatabaseName);
-
         _collection = database.GetCollection<Book>(settings.CollectionName);
     }
 
