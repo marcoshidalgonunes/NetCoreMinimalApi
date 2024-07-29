@@ -36,17 +36,22 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
             ? new
             {
                 statusCode,
-                Message = ((FluentValidation.ValidationException)exception).Errors.Aggregate(new StringBuilder(), (sb, error) =>
-
-                {
-                    sb.AppendLine(error.ErrorMessage);
-                    return sb;
-                }).ToString()
+                Message = "One or more fields are invalid",
+                Detailed = ((FluentValidation.ValidationException)exception).Errors
+                    .GroupBy(error => error.PropertyName)
+                    .Select(group => group.First().PropertyName)
+                    .Aggregate(new StringBuilder(), (sb, propertyName) =>
+                    {
+                        sb.AppendLine(propertyName);
+                        return sb;
+                    })
+                    .ToString()
             }
             : new
             {
                 statusCode,
-                Message = "Internal Server Error. Please try again later."
+                Message = "Internal Server Error. Please try again later.",
+                Detailed = exception.Message
             };
 
         var jsonResponse = JsonSerializer.Serialize(response);
