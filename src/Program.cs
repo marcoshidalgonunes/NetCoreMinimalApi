@@ -70,6 +70,8 @@ if (!isProduction)
 
 app.UseHttpsRedirection();
 
-app.MapGroup("/api").AddBookApi();
+app.MapGroup("/api")
+    .AddBookApi()
+    .RequireAuthorization();
 
 app.Run();

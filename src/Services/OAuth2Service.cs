@@ -16,7 +16,7 @@ internal static class OAuth2Service
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidIssuer = configuration["Keycloak:auth-server-url"],
-                    ValidAudience = $"{configuration["Keycloak:resource"]}"
+                    ValidAudiences = [$"{configuration["Keycloak:resource"]}", "account"]
                 };
             });
 
