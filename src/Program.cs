@@ -16,7 +16,7 @@ var isProduction = builder.Environment.IsProduction();
 
 // requires using Microsoft.Extensions.Options
 services.Configure<MongoDbSettings>(
-    builder.Configuration.GetSection(nameof(MongoDbSettings)));
+    configuration.GetSection(nameof(MongoDbSettings)));
 
 services.AddSingleton<IMongoDbSettings>(sp =>
        sp.GetRequiredService<IOptions<MongoDbSettings>>().Value);
@@ -26,7 +26,6 @@ services.AddSingleton<IBookRepository, BookRepository>();
 services.AddScoped<IValidator<Book>, BookValidator>();
 
 // Add services to the container.
-services.AddEndpointsApiExplorer();
 services.AddCors(options =>
 {
     options.AddDefaultPolicy(builder =>
@@ -39,6 +38,7 @@ services.AddCors(options =>
 
 if (!isProduction)
 {
+    services.AddEndpointsApiExplorer();
     services.AddSwaggerOAuth2(configuration);
 
     // Configure JSON options for Swagger

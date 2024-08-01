@@ -15,6 +15,7 @@ internal static class BookApiRouter
                 return await db.ReadAllAsync();
             })
             .Produces<List<Book>>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status500InternalServerError);
 
         group
@@ -24,7 +25,8 @@ internal static class BookApiRouter
                     ? Results.Ok(book)
                     : Results.NotFound();
             })
-            .Produces(StatusCodes.Status200OK)
+            .Produces<Book>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);
 
@@ -34,6 +36,7 @@ internal static class BookApiRouter
                 return await db.ReadByCriteriaAsync(criteria, search);
             })
             .Produces<List<Book>>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status500InternalServerError);
 
         group
@@ -45,6 +48,7 @@ internal static class BookApiRouter
             })
             .Produces(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status422UnprocessableEntity)
             .Produces(StatusCodes.Status500InternalServerError);
 
@@ -61,6 +65,7 @@ internal static class BookApiRouter
             })
             .Produces(StatusCodes.Status204NoContent)
             .Produces(StatusCodes.Status400BadRequest)
+            .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status422UnprocessableEntity)
             .Produces(StatusCodes.Status500InternalServerError);
@@ -77,6 +82,7 @@ internal static class BookApiRouter
                 return Results.NotFound();
             })
             .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status401Unauthorized)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status500InternalServerError);
 
