@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text;
 using System.Text.Json;
+using NetCoreMinimalApi.Domain.Models;
 
 namespace NetCoreMinimalApi.Middleware;
 
@@ -22,7 +23,7 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
         }
     }
 
-    private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+    private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         var isValidationException = exception is FluentValidation.ValidationException;
         var statusCode = isValidationException
@@ -33,28 +34,20 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
         context.Response.StatusCode = statusCode;
 
         var response = isValidationException
-            ? new
+            ? new ErrorResponse()
             {
-                statusCode,
                 Message = "One or more fields are invalid",
-                Detailed = ((FluentValidation.ValidationException)exception).Errors
-                    .GroupBy(error => error.PropertyName)
-                    .Select(group => group.First().PropertyName)
-                    .Aggregate(new StringBuilder(), (sb, propertyName) =>
-                    {
-                        sb.AppendLine(propertyName);
-                        return sb;
-                    })
-                    .ToString()
+                Details = ((FluentValidation.ValidationException)exception).Errors.Select(err => new ValidationError()
+                {
+                    Field = err.PropertyName,
+                    Message = err.ErrorMessage,
+                    AttemptedValue = err.AttemptedValue
+                }).ToList()
+
             }
-            : new
-            {
-                statusCode,
-                Message = "Internal Server Error. Please try again later.",
-                Detailed = exception.Message
-            };
+            : new ErrorResponse() { Message = "Internal Server Error. Please try again later." };
 
         var jsonResponse = JsonSerializer.Serialize(response);
-        return context.Response.WriteAsync(jsonResponse);
+        await context.Response.WriteAsync(jsonResponse);
     }
 }

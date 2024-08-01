@@ -17,7 +17,6 @@ internal sealed class BookValidator : AbstractValidator<Book>
             .NotEmpty().WithMessage("Category not informed");
 
         RuleFor(p => p.Price)
-            .NotEmpty().WithMessage("Price not informed")
             .GreaterThan(0).WithMessage("Invalid price");
     }
 }
