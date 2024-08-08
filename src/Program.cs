@@ -12,6 +12,7 @@ using NetCoreMinimalApi.Domain.Models;
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
+var isDevelopment = builder.Environment.IsDevelopment();
 var isProduction = builder.Environment.IsProduction();
 
 // requires using Microsoft.Extensions.Options
@@ -68,7 +69,10 @@ if (!isProduction)
     });
 }
 
-app.UseHttpsRedirection();
+if (!isDevelopment)
+{
+    app.UseHttpsRedirection();
+}
 
 app.MapGroup("/api")
     .AddBookApi()
