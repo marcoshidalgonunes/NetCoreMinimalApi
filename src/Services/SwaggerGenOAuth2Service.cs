@@ -38,4 +38,16 @@ public static class SwaggerGenOAuth2Service
 
         return services;
     }
+
+    public static WebApplication UseSwaggerOAuth2(this WebApplication app, IConfiguration configuration)
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI(options =>
+        {
+            options.OAuthClientId(configuration["OIDC:ClientId"]);
+            options.OAuthClientSecret(configuration["OIDC:ClientSecret"]);
+        });
+
+        return app;
+    }
 }

@@ -64,9 +64,7 @@ app.UseAuthorization();
 if (!isProduction)
 {
     app.UseSwagger();
-    app.UseSwaggerUI(options => {
-        options.OAuthClientId(configuration["Keycloak:resource"]);
-    });
+    app.UseSwaggerOAuth2(configuration);
 }
 
 if (!isDevelopment)
