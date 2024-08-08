@@ -21,7 +21,7 @@ services.Configure<MongoDbSettings>(
 services.AddSingleton<IMongoDbSettings>(sp =>
        sp.GetRequiredService<IOptions<MongoDbSettings>>().Value);
 
-services.AddSingleton<IBookRepository, BookRepository>();
+services.AddScoped<IBookRepository, BookRepository>();
 
 services.AddScoped<IValidator<Book>, BookValidator>();
 
