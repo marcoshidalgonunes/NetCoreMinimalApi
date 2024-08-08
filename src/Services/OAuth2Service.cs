@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace NetCoreMinimalApi.Services;
 
@@ -7,16 +8,21 @@ internal static class OAuth2Service
     public static IServiceCollection AddOAuth2(this IServiceCollection services,
                                                IConfiguration configuration)
     {
+        _ = bool.TryParse(configuration["OIDC:RequireHttpsMetadata"], out bool requireHttpsMetadata);
+        var authority = configuration["OIDC:Authority"];
+
         _ = services
             .AddAuthentication("Bearer")
             .AddJwtBearer(options =>
             {
-                options.RequireHttpsMetadata = !$"{configuration["Keycloak:ssl-required"]}".Equals("None", StringComparison.InvariantCultureIgnoreCase);
-                options.MetadataAddress = $"{configuration["Keycloak:auth-server-url"]}/realms/{configuration["Keycloak:realm"]}/.well-known/openid-configuration";
+                options.RequireHttpsMetadata = requireHttpsMetadata;
+                options.Authority = authority;
+                options.MetadataAddress = configuration["OIDC:MetadataAddress"] ?? throw new ArgumentNullException("OIDC:MetadataAddress");
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = configuration["Keycloak:auth-server-url"],
-                    ValidAudiences = [$"{configuration["Keycloak:resource"]}", "account"]
+                    ValidIssuer = authority,
+                    ValidAudiences = [configuration["OIDC:ClientId"], "account"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["OIDC:ClientSecret"] ?? string.Empty))
                 };
             });
 

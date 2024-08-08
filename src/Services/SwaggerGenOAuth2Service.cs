@@ -19,8 +19,7 @@ public static class SwaggerGenOAuth2Service
                 {
                     Implicit = new OpenApiOAuthFlow
                     {
-                        AuthorizationUrl = new Uri($"{configuration["Keycloak:auth-server-url"]}/realms/{configuration["Keycloak:realm"]}/protocol/openid-connect/auth"),
-
+                        AuthorizationUrl = new Uri($"{configuration["OIDC:Authority"]}/protocol/openid-connect/auth")
                     }
                 }
             });
